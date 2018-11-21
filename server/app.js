@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const authToken = require('./api/middleware/check-auth');
 
 
 //connecting to mongodb
@@ -17,6 +18,7 @@ const app = express();
 
 //routes
 const loginRoutes = require('./api/routes/login');
+const audiogramRoutes = require('./api/routes/audiogram');
 
 //adding middlewares
 app.use(morgan('dev'));
@@ -24,7 +26,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-//adding headers to response
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');
@@ -44,6 +45,7 @@ app.get('/', (req, res, next) => {
     res.sendFile('./client/index.html', {root: __dirname + '/../'});
 });
 app.use('/login', loginRoutes);
+app.use('/audiogram', audiogramRoutes);
 
 app.use('*', (error, req, res, next) => {
     res.status(404);

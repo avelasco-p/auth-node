@@ -42,10 +42,12 @@ router.post('/', (req, res, next) => {
                 expiresIn: '1h',
             });
 
-            res.status(200).json({
-                user: user,
-                token: token,
-            });
+            console.log(token);
+            if (token) {
+                res.header(`Authorization: Bearer ${token}`); 
+                res.redirect('../audiogram');
+            }
+
         })
         .catch(err => {
             console.log(err);
