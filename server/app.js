@@ -1,6 +1,16 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+
+//connecting to mongodb
+mongoose.connect('mongodb://localhost/dm-audiogram', { 
+    useCreateIndex: true,
+    useNewUrlParser: true 
+});
+
+mongoose.set('debug', true);
 
 //starting express app
 const app = express();
