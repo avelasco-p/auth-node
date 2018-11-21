@@ -2,9 +2,9 @@
   "name": "auth-node",
   "version": "1.0.0",
   "description": "",
-  "main": "./server/app.js",
+  "main": "./server/server.js",
   "scripts": {
-    "start": "./server/app.js",
+    "start": "nodemon /server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "express-session": "^1.15.6",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.13",
+    "morgan": "^1.9.1",
     "nodemon": "^1.18.6",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",

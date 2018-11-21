@@ -1,35 +1,27 @@
 const express = require('express');
-const path = require('path');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
+//starting express app
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('home page');
+//routes
+const loginRoutes = require('./api/routes/login');
+
+//adding middlewares
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/login', loginRoutes);
+
+
+app.get('/', (req, res, next) => {
+    res.sendFile('./client/index.html', {root: __dirname + '/../'});
+});
+
+app.use('*', (error, req, res, next) => {
+    res.status(404);
 });
 
 
-app.get('/login', (req, res) => {
-    res.send('this should be a file with login form');
-});
-
-app.post('/login', (req, res) => {
-    req.headers()
-    res.json({
-        status: 200,
-        message: 'logged in succesfully',
-    });
-});
-
-app.get('*', (req, res) => {
-    res.json({
-        status: 404,
-        message: 'page not found',
-    })
-});
-
-
-app.listen(8000, (req, res) => {
-    console.log(`listening on port ${8000}`);
-});
+module.exports = app;
