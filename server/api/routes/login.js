@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -10,20 +11,21 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const user = new User({
+    const tmpUser = new User({
         email: req.body.email,
     });
 
 
-    console.log(`user email: ${user.email}`);
+    console.log(`user email: ${tmpUser.email}`);
 
-    User.findOne({ email: user.email })
+    User.findOne({ email: tmpUser.email })
         .exec()
-        .then(doc => {
-            console.log('from database: ' + doc);
+        .then( user => {
+            console.log('from database: ' + user);
 
-            if (!doc) {
-                user.save()
+            if (!user) {
+                tmpUser.save()
+                    .exec()
                     .then(result => {
                         console.log(result);
                     })
@@ -33,7 +35,17 @@ router.post('/', (req, res, next) => {
                     })
             }
 
-            res.status(200).json(user);
+            const token = jwt.sign({
+                userId: user._id,
+                email: user.email,
+            }, 'secretKey', {
+                expiresIn: '1h',
+            });
+
+            res.status(200).json({
+                user: user,
+                token: token,
+            });
         })
         .catch(err => {
             console.log(err);
