@@ -23,19 +23,18 @@ app.use((req, res, next) => {
         res.header('Access-Control-Allow-Methods', 'GET, POST'); 
         return res.status(200).json({});
     }
+
+    next();
+
 })
 
 
 //routes to handle
-app.use('/login', loginRoutes);
-
-
-//root route
 app.get('/', (req, res, next) => {
     res.sendFile('./client/index.html', {root: __dirname + '/../'});
 });
+app.use('/login', loginRoutes);
 
-//not found page
 app.use('*', (error, req, res, next) => {
     res.status(404);
 });
