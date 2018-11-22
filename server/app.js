@@ -1,8 +1,9 @@
 const express = require('express');
+const session = require('express-session');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const authToken = require('./api/middleware/check-auth');
+const authToken = require('./middleware/check-auth');
 
 
 //connecting to mongodb
@@ -13,17 +14,26 @@ mongoose.connect('mongodb://localhost/dm-audiogram', {
 
 mongoose.set('debug', true);
 
+
 //starting express app
 const app = express();
 
+
 //routes
-const loginRoutes = require('./api/routes/login');
-const audiogramRoutes = require('./api/routes/audiogram');
+const loginRoutes = require('./routes/login');
+const audiogramRoutes = require('./routes/audiogram');
+
 
 //adding middlewares
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({
+    name: 'jwttoken',
+    secret: 'secretKey',
+    resave: false,
+    saveUninitialized: false,
+}));
 
 
 app.use((req, res, next) => {
